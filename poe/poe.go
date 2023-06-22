@@ -2,12 +2,13 @@ package poe
 
 import (
 	"errors"
+	"sync"
+	"time"
+
 	"github.com/go-resty/resty/v2"
 	"github.com/gorilla/websocket"
 	"github.com/juzeon/poe-openai-proxy/conf"
 	"github.com/juzeon/poe-openai-proxy/util"
-	"sync"
-	"time"
 )
 
 var httpClient *resty.Client
@@ -68,13 +69,13 @@ func (c *Client) getContentToSend(messages []Message) string {
 	}
 	for _, message := range messages {
 		if simulateRoles {
-			content += "||>" + leadingMap[message.Role] + ":\n" + message.Content + "\n"
+			content += "" + leadingMap[message.Role] + ":\n" + message.Content + "\n"
 		} else {
 			content += message.Content + "\n"
 		}
 	}
 	if simulateRoles {
-		content += "||>Assistant:\n"
+
 	}
 	util.Logger.Debug("Generated content to send: " + content)
 	return content
